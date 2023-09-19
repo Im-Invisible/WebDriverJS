@@ -1,0 +1,4 @@
+.node_modules/
+.specs/test.e2e.js
+.test/main.page.js
+
