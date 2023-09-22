@@ -10,13 +10,13 @@ import PricingPage from "./../pages/pricing.page.js"
 describe('GitHub main page', () => {
 
     //  TestCase 1 
-    xit('should enter valid data into Sign up fields', async () => {
+    it('should enter valid data into Sign up fields', async () => {
         browser.setWindowSize(1800, 1000)
         await browser.url('https://github.com/');
 
-        await MainPage.clickOnSignUp()
-        await browser.pause(3000)
+        await MainPage.clickOnSignUp()        
         expect(SignUpPage.welcomeText).toHaveValue('Welcome to GitHub! Let’s begin the adventure')
+        await browser.pause(3000)
 
         await SignUpPage.setEmailInput('example3412@gmail.com')
         await browser.pause(1000)
@@ -36,13 +36,12 @@ describe('GitHub main page', () => {
     });
 
     //  TestCase 2 
-    xit('should check the visibility of the text on the main page', async () => {
+    it('should check the visibility of the text on the main page', async () => {
         browser.setWindowSize(1800, 1000)
         await browser.url('https://github.com/');
 
         //await MainPage.textAboveFooter.scrollIntoView();
         await browser.execute((el) => el.scrollIntoView({ behavior: 'smooth' }), await MainPage.textAboveFooter);
-        await browser.pause(1000)
         await browser.execute(() => {window.scrollBy(0, -100);});
 
         expect(MainPage.getText).toHaveValue('The place for anyone from anywhere to build anything')
@@ -54,16 +53,18 @@ describe('GitHub main page', () => {
 
         expect(EnterprisePage.enterpriseText).toHaveValue('Pick your trial plan')
         await EnterprisePage.clickOnEnterpriseCloud()
-        await browser.pause(1000)
     });
 
     //  TestCase 3 
-    xit('should check subscribe functional', async () => {
+    it('should check subscribe functional', async () => {
         browser.setWindowSize(1800, 1000)
         await browser.url('https://github.com/');
 
         await browser.execute((el) => el.scrollIntoView({ behavior: 'smooth' }), await MainPage.subscribeButton);
-        await browser.pause(1000)
+
+        await browser.waitUntil(async () => {
+            return MainPage.subscribeButton.isDisplayed()
+        }, 5000, 'Button is not displayed')
 
         let clickable = await MainPage.subscribeButton.isClickable()
         expect(clickable).toBe(true)
@@ -87,7 +88,7 @@ describe('GitHub main page', () => {
 
         await browser.waitUntil(async () => {
             return ResoursesPage.succesfulText.isDisplayed();
-        }, 5000, 'Thanks for subscribing!')
+        }, 5000, 'Text is not displayed!')
     });
 
     //  TestCase 4 
@@ -100,12 +101,12 @@ describe('GitHub main page', () => {
 
         await browser.waitUntil(async () => {
             return MainPage.searchListBox.isDisplayed()
-        }, 5000, 'Results are not show')
+        }, 5000, 'Results are not shown')
         await MainPage.clickOnSerchListBox()
 
         await browser.waitUntil(async () => {
             return SearchPage.searchResult.isDisplayed()
-        }, 5000, 'Results are not show')
+        }, 5000, 'Results are not shown')
         
         const currentLink = await browser.getUrl()
         console.log(currentLink);
@@ -118,7 +119,7 @@ describe('GitHub main page', () => {
     });
 
     //  TestCase 5 
-    xit('should check the price on the Picing page', async () => {
+    it('should check the price on the Picing page', async () => {
         browser.setWindowSize(1800, 1000)
         await browser.url('https://github.com/');
 
@@ -126,11 +127,13 @@ describe('GitHub main page', () => {
 
         await browser.waitUntil(async () => {
             return PricingPage.mainText.isDisplayed()
-        }, 5000, 'Get the complete developer platform.')
+        }, 5000, 'Text is not displayed!')
 
         await browser.execute((el) => el.scrollIntoView({ behavior: 'smooth' }), await PricingPage.featuresLink)
         await PricingPage.clickOnFeaturesLink()
-        await browser.pause(1000)
+        await browser.waitUntil(async () => {
+            return PricingPage.h1Text.isDisplayed()
+        }, 5000, 'Text is not displayed!')
         await browser.execute(() => {window.scrollBy(0, -100);})
         expect(PricingPage.h1Text).toHaveValue('Compare features')
     });    
